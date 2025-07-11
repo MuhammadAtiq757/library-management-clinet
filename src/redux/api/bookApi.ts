@@ -2,23 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { toast } from 'react-toastify';
 import type { Book, BorrowSummary } from '../../types/types';
 
-// interface Book {
-//   _id: string;
-//   title: string;
-//   author: string;
-//   genre: string;
-//   isbn: string;
-//   description?: string;
-//   copies: number;
-//   available: boolean;
-// }
-
-
-// interface BorrowSummary {
-//   title: string;
-//   isbn: string;
-//   totalQuantityBorrowed: number;
-// }
 
 export const bookApi = createApi({
   reducerPath: 'bookApi',

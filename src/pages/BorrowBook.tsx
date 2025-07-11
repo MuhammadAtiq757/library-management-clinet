@@ -3,11 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useBorrowBookMutation, useGetBookByIdQuery } from '../redux/api/bookApi';
 import type { BorrowFormData } from '../types/types';
 
-// interface BorrowFormData {
-//   quantity: number;
-//   dueDate: string;
-// }
-
 const BorrowBook = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
