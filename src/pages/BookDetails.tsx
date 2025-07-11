@@ -57,13 +57,13 @@ const BookDetailsPage = () => {
           Back
         </button>
         <Link
-          to={`/edit-book/${book.id}`}
+          to={`/edit-book/${book._id}`}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         >
           Edit Book
         </Link>
         <Link
-          to={`/borrow/${book.id}`}
+          to={`/borrow/${book._id}`}
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
         >
           Borrow Book

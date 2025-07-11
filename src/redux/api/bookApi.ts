@@ -12,12 +12,6 @@ interface Book {
   available: boolean;
 }
 
-interface Borrow {
-  id: string;
-  bookId: string;
-  quantity: number;
-  dueDate: string;
-}
 
 interface BorrowSummary {
   title: string;
@@ -45,8 +39,10 @@ export const bookApi = createApi({
 
     getBookById: builder.query<Book, string>({
       query: (id) => `/books/${id}`,
+      transformResponse: (response: { success: boolean; data: Book }) => response.data,
       providesTags: (_, __, id) => [{ type: 'Books', id }],
     }),
+
 
     addBook: builder.mutation<void, Partial<Book>>({
       query: (body) => ({

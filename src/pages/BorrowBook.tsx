@@ -1,3 +1,4 @@
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useBorrowBookMutation, useGetBookByIdQuery } from '../redux/api/bookApi';
@@ -11,8 +12,8 @@ const BorrowBook = () => {
   const { bookId } = useParams<{ bookId: string }>();
   const navigate = useNavigate();
 
+  const { data: book, isLoading, isError } = useGetBookByIdQuery(bookId!);
   const [borrowBook] = useBorrowBookMutation();
-  const { data: bookResponse, isLoading } = useGetBookByIdQuery(bookId!);
 
   const {
     register,
@@ -26,20 +27,18 @@ const BorrowBook = () => {
   });
 
   const onSubmit = async (formData: BorrowFormData) => {
-    if (!bookResponse || !bookResponse.success || !bookResponse.data) {
+    if (!book) {
       alert('Failed to load book details.');
       return;
     }
 
-    const bookData = bookResponse.data;
-
-    if (formData.quantity > bookData.copies) {
-      alert(`Cannot borrow more than ${bookData.copies} available`);
+    if (formData.quantity > book.copies) {
+      alert(`Cannot borrow more than ${book.copies} available`);
       return;
     }
 
     const payload = {
-      book: bookData._id,
+      book: book._id,
       quantity: formData.quantity,
       dueDate: new Date(formData.dueDate).toISOString(),
     };
@@ -61,7 +60,7 @@ const BorrowBook = () => {
     );
   }
 
-  if (!bookResponse?.success || !bookResponse.data) {
+  if (isError || !book) {
     return (
       <div className="text-center text-red-600 font-medium py-6">
         Book not found or failed to load.
@@ -69,34 +68,35 @@ const BorrowBook = () => {
     );
   }
 
-  const bookData = bookResponse.data;
-
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-200 rounded-xl shadow-lg">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">📖 Borrow Book</h1>
       <p className="text-sm text-gray-600 mb-4">
-        <span className="font-medium">Title:</span> {bookData.title}
+        <span className="font-medium">Title:</span> {book.title}
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Quantity */}
         <div>
-          <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="quantity"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Quantity
           </label>
           <input
             id="quantity"
             type="number"
             min={1}
-            max={bookData.copies}
+            max={book.copies}
             placeholder="Enter quantity"
             className="w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
             {...register('quantity', {
               required: 'Quantity is required',
               min: 1,
               max: {
-                value: bookData.copies,
-                message: `Cannot borrow more than ${bookData.copies} copies`,
+                value: book.copies,
+                message: `Cannot borrow more than ${book.copies} copies`,
               },
               valueAsNumber: true,
             })}
@@ -108,7 +108,10 @@ const BorrowBook = () => {
 
         {/* Due Date */}
         <div>
-          <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="dueDate"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Due Date
           </label>
           <input
