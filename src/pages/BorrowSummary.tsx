@@ -1,10 +1,11 @@
 import { useGetBorrowSummaryQuery } from '../redux/api/bookApi';
+import type { BorrowSummaryItem } from '../types/types';
 
-interface BorrowSummaryItem {
-  title: string;
-  isbn: string;
-  totalQuantityBorrowed: number;
-}
+// interface BorrowSummaryItem {
+//   title: string;
+//   isbn: string;
+//   totalQuantityBorrowed: number;
+// }
 
 const BorrowSummary = () => {
   const { data, isLoading } = useGetBorrowSummaryQuery();
